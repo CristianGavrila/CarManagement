@@ -1,0 +1,72 @@
+﻿@model CarManagement.ViewModels.CarViewModel
+
+<form method="post" asp-action="Update">
+    <input asp-for="Car.IdCar" hidden />
+    <input asp-for="Car.DetailId" hidden />
+    <input asp-for="Detail.IdDetail" hidden />
+    <input asp-for="Car.ModelId" hidden />
+    <input asp-for="Model.IdModel" hidden />
+    <div class="border p-4">
+        <div class="form-group row">
+            <h2 class="text-primary">Update Car</h2>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Manufacturer.ManufacturerName"></label>
+            <select class="form-control" asp-for="Model.ManufacturerId" asp-items="Model.ManufacturerDropDown"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Model.ModelName"></label>
+            <select class="form-control" asp-for="Car.ModelId" asp-items="Model.ModelDropDown"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Detail.EngineCapacity"></label>
+            <input class="form-control" asp-for="Detail.EngineCapacity" />
+        </div>
+        <div class="form-group">
+            <label asp-for="CarFuel.Fuel"></label>
+            <select class="form-control" asp-for="Car.FuelId" asp-items="Model.FuelDropDown"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="BodyStyle.Body"></label>
+            <select class="form-control" asp-for="Car.BodyId" asp-items="Model.BodyDropDown"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="CarLocation.Location"></label>
+            <select class="form-control" asp-for="Car.LocationId" asp-items="Model.LocationDropDown"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="ModelYear.Year"></label>
+            <select class="form-control" asp-for="Car.YearId" asp-items="Model.YearDropDown"></select>
+        </div>
+        <table width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <label asp-for="Detail.Automatic"></label>
+                        <input class="form-control" asp-for="Detail.Automatic" />
+                    </td>
+                    <td>
+                        <label asp-for="Detail.Leather"></label>
+                        <input class="form-control" asp-for="Detail.Leather" />
+                    </td>
+                    <td>
+                        <label asp-for="Detail.Sunroof"></label>
+                        <input class="form-control" asp-for="Detail.Sunroof" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <div class="form-group row">
+        <div class="col-8 offset-2 row">
+            <div class="col">
+                <a class="btn btn-danger w-75" asp-action="Index">Go Back</a>
+            </div>
+            <div class="col">
+                <input type="submit" class="btn btn-success w-75" value="Update" />
+            </div>
+        </div>
+    </div>
+</form>

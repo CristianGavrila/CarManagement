@@ -1,0 +1,79 @@
+﻿@model CarManagement.ViewModels.CarViewModel
+
+<form method="post" asp-action="Create">
+    <div class="border p-4">
+        <div class="form-group row">
+            <h2 class="text-primary">Add New Car</h2>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Manufacturer.ManufacturerName"></label>
+            <select class="form-control" asp-for="Car.Model.ManufacturerId" asp-items="Model.ManufacturerDropDown">
+                <option value="">Select a Manufacturer</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Model.ModelName"></label>
+            <select class="form-control" asp-for="Car.ModelId" asp-items="Model.ModelDropDown">
+                <option value="">Select a Model</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Detail.EngineCapacity"></label>
+            <input class="form-control" asp-for="Detail.EngineCapacity" placeholder="Enter Engine Capacity"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="CarFuel.Fuel"></label>
+            <select class="form-control" asp-for="Car.FuelId" asp-items="Model.FuelDropDown">
+                <option value="">Select a Fuel</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="BodyStyle.Body"></label>
+            <select class="form-control" asp-for="Car.BodyId" asp-items="Model.BodyDropDown">
+                <option value="">Select a Body Style</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="CarLocation.Location"></label>
+            <select class="form-control" asp-for="Car.LocationId" asp-items="Model.LocationDropDown">
+                <option value="">Select a Location</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="ModelYear.Year"></label>
+            <select class="form-control" asp-for="Car.YearId" asp-items="Model.YearDropDown">
+                <option value="">Select the Fabrication Year</option>
+            </select>
+        </div>
+        <table width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <label asp-for="Detail.Automatic"></label>
+                        <input class="form-control" asp-for="Detail.Automatic" />
+                    </td>
+                    <td>
+                        <label asp-for="Detail.Leather"></label>
+                        <input class="form-control" asp-for="Detail.Leather" />
+                    </td>
+                    <td>
+                        <label asp-for="Detail.Sunroof"></label>
+                        <input class="form-control" asp-for="Detail.Sunroof" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <div class="form-group row">
+        <div class="col-8 offset-2 row">
+            <div class="col">
+                <a class="btn btn-danger w-75" asp-action="Index">Go Back</a>
+            </div>
+            <div class="col">
+                <input type="submit" class="btn btn-success w-75" value="Add New Car" />
+            </div>
+        </div>
+    </div>
+</form>

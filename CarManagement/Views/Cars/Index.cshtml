@@ -1,0 +1,71 @@
+﻿@model IEnumerable<CarManagement.Models.Car>
+
+<div class="row pt-4">
+    <div class="col-6">
+        <h2 class="text-primary">Cars List</h2>
+    </div>
+    <div class="col-6 text-right">
+        <a class="btn btn-primary" asp-controller="Cars" asp-action="Create">Add New Car</a>
+    </div>
+</div>
+<br />
+<table class="table table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th class="text-center">
+                Id
+            </th>
+            <th class="text-center">
+                Manufacturer
+            </th>
+            <th class="text-center">
+                Model
+            </th>
+            <th class="text-center">
+                Bodystyle
+            </th>
+            <th class="text-center">
+                Year
+            </th>
+            <th class="text-center">
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td width="5%">@car.IdCar</td>
+                <td width="18%" class="text-center">@car.Model.Manufacturer.ManufacturerName</td>
+                <td width="18%" class="text-center">@car.Model.ModelName</td>
+                <td width="18%" class="text-center">@car.Body.Body</td>
+                <td width="15%" class="text-center">@car.Year.Year</td>
+                <td width="26%" class="text-center">
+                    <form asp-action="Delete" asp-controller="Cars" asp-route-Id="@car.IdCar">
+                        <a class="btn btn-primary mx-1" style="width:45%" asp-controller="Cars" asp-action="Update" asp-route-Id="@car.IdCar">Update</a>
+                        <button class="btn btn-danger mx-1" style="width:45%" onclick="return confirm('Are you sure you want to delete this entry?')" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@*<div class="w-100 btn-group" role="group">
+  <a class="btn btn-primary mx-1" asp-controller="Cars" asp-action="Update" asp-route-Id="@car.IdCar">Update</a>
+  <a class="btn btn-danger mx-1" asp-controller="Cars" asp-action="Delete" asp-route-Id="@car.IdCar">Delete</a>
+              </div>*@
+
+
+@* Nu am reusit sa il fac sa mearga cu script separat
+    <script>
+        function deleteFunction() {
+            if (confirm("Are you sure you want to Delete this entry?")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script> *@
