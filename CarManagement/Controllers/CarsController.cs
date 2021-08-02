@@ -1,9 +1,11 @@
 ﻿using CarManagement.Models;
 using CarManagement.ViewModels;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,7 +30,9 @@ namespace CarManagement.Controllers
                 obj.Body = _db.BodyStyles.FirstOrDefault(u => u.IdBody == obj.BodyId);
                 obj.Detail = _db.Details.FirstOrDefault(u => u.IdDetail == obj.DetailId);
                 obj.Model = _db.Models.FirstOrDefault(u => u.IdModel == obj.ModelId);
-                obj.Model.Manufacturer = _db.Manufacturers.FirstOrDefault(u => u.IdManufacturer == obj.Model.ManufacturerId);
+                if (obj.Model != null)
+                    obj.Model.Manufacturer =
+                        _db.Manufacturers.FirstOrDefault(u => u.IdManufacturer == obj.Model.ManufacturerId);
                 obj.Year = _db.ModelYears.FirstOrDefault(u => u.IdYear == obj.YearId);
             }
             return View(objList);
@@ -89,8 +93,7 @@ namespace CarManagement.Controllers
             }
             return View(carViewModel);
         }
-
-
+        
         //UPDATE
         //Get
         public IActionResult Update(int? id)
@@ -173,7 +176,7 @@ namespace CarManagement.Controllers
             carViewModel.Car = _db.Cars.Find(id);
             carViewModel.Detail = _db.Details.Find(carViewModel.Car.DetailId);
 
-            if (carViewModel == null)
+            if (carViewModel.Car == null)
             {
                 return NotFound();
             }
@@ -182,6 +185,52 @@ namespace CarManagement.Controllers
             _db.Details.Remove(carViewModel.Detail);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+        
+        
+        //EXPORT
+        public IActionResult Export()
+        {
+            IEnumerable<Car> carList = _db.Cars;
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Cars");
+                var currentRow = 1;
+
+                #region Header
+                worksheet.Cell(currentRow, 1).Value = "Car Id";
+                worksheet.Cell(currentRow, 2).Value = "Detail Id";
+                worksheet.Cell(currentRow, 3).Value = "Bodystyle Id";
+                worksheet.Cell(currentRow, 4).Value = "Location Id";
+                worksheet.Cell(currentRow, 5).Value = "Year Id";
+                worksheet.Cell(currentRow, 6).Value = "Fuel Id";
+                #endregion
+
+                #region Body
+                foreach (var car in carList)
+                {
+                    currentRow ++;
+                    worksheet.Cell(currentRow, 1).Value = car.IdCar;
+                    worksheet.Cell(currentRow, 2).Value = car.DetailId;
+                    worksheet.Cell(currentRow, 3).Value = car.BodyId;
+                    worksheet.Cell(currentRow, 4).Value = car.LocationId;
+                    worksheet.Cell(currentRow, 5).Value = car.YearId;
+                    worksheet.Cell(currentRow, 6).Value = car.FuelId;
+                }
+                #endregion
+
+                    using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+                    return File(
+                        content,
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "Car List.xlsx"
+                        );
+                }
+            }
         }
     }
 }
