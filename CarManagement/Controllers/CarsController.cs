@@ -20,20 +20,25 @@ namespace CarManagement.Controllers
             _db = db;
         }
 
+        public Car CarInitialize(Car car)
+        {
+            car.Model = _db.Models.FirstOrDefault(u => u.IdModel == car.ModelId);
+            car.Model.Manufacturer = _db.Manufacturers.FirstOrDefault(u => u.IdManufacturer == car.Model.ManufacturerId);
+            car.Fuel = _db.CarFuels.FirstOrDefault(u => u.IdFuel == car.FuelId);
+            car.Body = _db.BodyStyles.FirstOrDefault(u => u.IdBody == car.BodyId);
+            car.Location = _db.CarLocations.FirstOrDefault(u => u.IdLocation == car.LocationId);
+            car.Year = _db.ModelYears.FirstOrDefault(u => u.IdYear == car.YearId);
+            car.Detail = _db.Details.FirstOrDefault(u => u.IdDetail == car.DetailId);
+            return car;
+        }
+
         public IActionResult Index()
         {
             IEnumerable<Car> objList = _db.Cars;
 
             foreach (var obj in objList)
             {
-                obj.Location = _db.CarLocations.FirstOrDefault(u => u.IdLocation == obj.LocationId);
-                obj.Body = _db.BodyStyles.FirstOrDefault(u => u.IdBody == obj.BodyId);
-                obj.Detail = _db.Details.FirstOrDefault(u => u.IdDetail == obj.DetailId);
-                obj.Model = _db.Models.FirstOrDefault(u => u.IdModel == obj.ModelId);
-                if (obj.Model != null)
-                    obj.Model.Manufacturer =
-                        _db.Manufacturers.FirstOrDefault(u => u.IdManufacturer == obj.Model.ManufacturerId);
-                obj.Year = _db.ModelYears.FirstOrDefault(u => u.IdYear == obj.YearId);
+                CarInitialize(obj);
             }
             return View(objList);
         }
@@ -199,24 +204,33 @@ namespace CarManagement.Controllers
                 var currentRow = 1;
 
                 #region Header
-                worksheet.Cell(currentRow, 1).Value = "Car Id";
-                worksheet.Cell(currentRow, 2).Value = "Detail Id";
-                worksheet.Cell(currentRow, 3).Value = "Bodystyle Id";
-                worksheet.Cell(currentRow, 4).Value = "Location Id";
-                worksheet.Cell(currentRow, 5).Value = "Year Id";
-                worksheet.Cell(currentRow, 6).Value = "Fuel Id";
+                worksheet.Cell(currentRow, 1).Value = "Id";
+                worksheet.Cell(currentRow, 2).Value = "Manufacturer";
+                worksheet.Cell(currentRow, 3).Value = "Model";
+                worksheet.Cell(currentRow, 4).Value = "Fuel";
+                worksheet.Cell(currentRow, 5).Value = "Body";
+                worksheet.Cell(currentRow, 6).Value = "Year";
+                worksheet.Cell(currentRow, 7).Value = "Location";
+                worksheet.Cell(currentRow, 8).Value = "Automatic";
+                worksheet.Cell(currentRow, 9).Value = "Leather";
+                worksheet.Cell(currentRow, 10).Value = "Sunroof";
                 #endregion
 
                 #region Body
                 foreach (var car in carList)
                 {
+                    CarInitialize(car);                                                                      
                     currentRow ++;
                     worksheet.Cell(currentRow, 1).Value = car.IdCar;
-                    worksheet.Cell(currentRow, 2).Value = car.DetailId;
-                    worksheet.Cell(currentRow, 3).Value = car.BodyId;
-                    worksheet.Cell(currentRow, 4).Value = car.LocationId;
-                    worksheet.Cell(currentRow, 5).Value = car.YearId;
-                    worksheet.Cell(currentRow, 6).Value = car.FuelId;
+                    worksheet.Cell(currentRow, 2).Value = car.Model.Manufacturer.ManufacturerName;
+                    worksheet.Cell(currentRow, 3).Value = car.Model.ModelName;
+                    worksheet.Cell(currentRow, 4).Value = car.Fuel.Fuel;
+                    worksheet.Cell(currentRow, 5).Value = car.Body.Body;
+                    worksheet.Cell(currentRow, 6).Value = car.Year.Year;
+                    worksheet.Cell(currentRow, 7).Value = car.Location.Location;
+                    worksheet.Cell(currentRow, 8).Value = car.Detail.Automatic;
+                    worksheet.Cell(currentRow, 9).Value = car.Detail.Leather;
+                    worksheet.Cell(currentRow, 10).Value = car.Detail.Sunroof;
                 }
                 #endregion
 
